@@ -31,10 +31,6 @@ namespace praciteAccounting {
             refresh();
         }
 
-        private void add_button_Click(object sender, EventArgs e) {
-            new AddDepartment().Show();
-        }
-
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
             DataBaseConnection.sqlCommandQuery("UPDATE departments SET " + keys[e.ColumnIndex + 1] + " =  '" + dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value + "' WHERE id_department = " + (e.RowIndex + 1).ToString());
         }
@@ -42,6 +38,17 @@ namespace praciteAccounting {
         private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e) {
             DataBaseConnection.sqlCommandQuery("INSERT INTO departments (name_department) VALUES ('" + e.Row.Cells[0].Value + "')");
             MessageBox.Show("Отделение успешно добавлено", "Добавление отделения", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void dataGridView1_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Delete) {
+                foreach (DataGridViewCell oneCell in dataGridView1.SelectedCells) {
+                    if (oneCell.Selected) {
+                        dataGridView1.Rows.RemoveAt(oneCell.RowIndex);
+                        DataBaseConnection.sqlCommandQuery("DELETE FROM departments WHERE department_id = '" + (oneCell.RowIndex + 1).ToString() + "'");
+                    }
+                }
+            }
         }
     }
 }
