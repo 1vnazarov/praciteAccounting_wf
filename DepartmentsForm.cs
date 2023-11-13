@@ -17,10 +17,10 @@ namespace praciteAccounting {
         }
         private string[] keys = { "id_department", "name_department" };
         private void refresh() {
-            DataTable dt = DataBaseConnection.dataAdapterSelect("SELECT * FROM departments");
+            DataTable dt = DataBaseConnection.dataAdapterSelect("SELECT name_department FROM departments");
             dataGridView1.Rows.Clear();
-            foreach (DataRow dr in dt.Rows) {
-                dataGridView1.Rows.Add(dr["id_department"], dr["name_department"]);
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                dataGridView1.Rows.Add(dt.Rows[i]["name_department"]);
             }
         }
         private void DepartmentsForm_Load(object sender, EventArgs e) {
@@ -36,7 +36,12 @@ namespace praciteAccounting {
         }
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
-            DataBaseConnection.sqlCommandQuery("UPDATE departments SET " + keys[e.ColumnIndex] + " =  '" + dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() + "' WHERE id_department = " + e.RowIndex + 1);
+            DataBaseConnection.sqlCommandQuery("UPDATE departments SET " + keys[e.ColumnIndex + 1] + " =  '" + dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value + "' WHERE id_department = " + (e.RowIndex + 1).ToString());
+        }
+
+        private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e) {
+            DataBaseConnection.sqlCommandQuery("INSERT INTO departments (name_department) VALUES ('" + e.Row.Cells[0].Value + "')");
+            MessageBox.Show("Отделение успешно добавлено", "Добавление отделения", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

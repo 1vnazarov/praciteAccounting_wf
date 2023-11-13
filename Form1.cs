@@ -14,9 +14,6 @@ namespace praciteAccounting {
         public Form1() {
             InitializeComponent();
         }
-        private void отделенияToolStripMenuItem_Click(object sender, EventArgs e) {
-            new DepartmentsForm().Show();
-        }
 
         private void department_button_Click(object sender, EventArgs e) {
             new DepartmentsForm().Show();
